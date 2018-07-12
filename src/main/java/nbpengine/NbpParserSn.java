@@ -24,14 +24,19 @@ import java.util.*;
 
 public class NbpParserSn {
     private Map<String, String[]> courses;
+    private ArrayList<String> valutes;
     private static NbpParserSn nbpParseSn = new NbpParserSn();
 
     private NbpParserSn(){
         initializeCourses();
     }
 
-    static NbpParserSn getInstance(){
+    public static NbpParserSn getInstance(){
         return nbpParseSn;
+    }
+
+    public ArrayList<String> getValutes(){
+        return valutes;
     }
 
     private String getUrlContent(String urlAddress)
@@ -125,12 +130,15 @@ public class NbpParserSn {
 
         for(int i = 0; i < coursesArr.length; i++){
             for(int j = 0; j < coursesArr[i].length; j++){
-                String[] tmpArr = new String[coursesArr[i].length-1];
+                String[] tmpArr = new String[coursesArr[i].length];
                 String valuteName = null;
-                if(j == 0)
+                if(j == 1) {
                     valuteName = coursesArr[i][j];
+                    tmpArr[j] = coursesArr[i][j];
+                    valutes.add(coursesArr[i][j]);
+                }
                 else
-                    tmpArr[j-1] = coursesArr[i][j];
+                    tmpArr[j] = coursesArr[i][j];
 
                 if(j == coursesArr[i].length - 1)
                     courses.put(valuteName,tmpArr);

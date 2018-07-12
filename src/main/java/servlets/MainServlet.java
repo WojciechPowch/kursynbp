@@ -1,5 +1,6 @@
 package servlets;
 
+import nbpengine.NbpParserSn;
 import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -12,6 +13,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class MainServlet extends HttpServlet {
+
+    private NbpParserSn bankData = NbpParserSn.getInstance();
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException{
         response.setContentType("text/html");
 
@@ -47,6 +51,9 @@ public class MainServlet extends HttpServlet {
 
             switch(command){
                 case "vievCfg":
+                    JSONObject jsonResponse = new JSONObject();
+                    jsonResponse.put("valutes",bankData.getValutes());
+                    out.println(jsonResponse);
                     break;
                 case "get":
                     break;
