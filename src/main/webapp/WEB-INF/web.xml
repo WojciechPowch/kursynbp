@@ -7,11 +7,11 @@
 
   <servlet>
     <servlet-name>MainServlet</servlet-name>
-    <servlet-class>MainServlet</servlet-class>
+    <servlet-class>servlets.MainServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
     <servlet-name>MainServlet</servlet-name>
-    <url-pattern>/connect</url-pattern>
+    <url-pattern>/redist</url-pattern>
   </servlet-mapping>
 </web-app>

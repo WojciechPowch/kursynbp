@@ -12,19 +12,43 @@ if(serverHostName === "localhost")
 else
     serverPath = serverProtocolName + "//" + serverHostName;
 
-function getVieiwConfigConnection(url, jsonData, operation){
+function getViewConfigConnection(url, jsonData){
     $.ajax({
-        url: url + "/connect",
+        url: url + "/redist",
         type: 'POST',
         data: jsonData,
         dataType: 'json',
         async: true,
         success: function(event){
-            
+            //metody budujące DOM
+            var response  = event;
+            if(response){
+                if(response.valutes){
+                    var valutesArr = response.valutes;
+                    
+                    valutesArr.forEach(function(item, i, arr){
+                        var el = document.createElement('div');
+                        var node = document.createTextNode(item.toString());
+                        el.appendChild(node);
+                        $("#valutes").append(el);
+                    });
+                }
+            }
         },
         error: function(){
-            
+            alert("Server connection error")
         }
     });
+}
+
+
+function getViewConf(){
+    var jsonData = new Object();
+    jsonData.command = "viewCfg";
+    getViewConfigConnection(serverPath, JSON.stringify(jsonData));
+}
+
+window.onload = function(){
+    getViewConf();
 }
 

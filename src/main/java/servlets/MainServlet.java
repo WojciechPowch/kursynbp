@@ -44,16 +44,16 @@ public class MainServlet extends HttpServlet {
 
             JSONObject jsonObject = new JSONObject(builder.toString());
 
-            response.setContentType("text/html");
+            response.setContentType("text/html;charset=UTF-8");
             PrintWriter out = response.getWriter();
 
             String command = jsonObject.getString("command");
 
             switch(command){
-                case "vievCfg":
+                case "viewCfg":
                     JSONObject jsonResponse = new JSONObject();
                     jsonResponse.put("valutes",bankData.getValutes());
-                    out.println(jsonResponse);
+                    out.println(jsonResponse.toString());
                     break;
                 case "get":
                     break;

@@ -23,8 +23,8 @@ import java.util.*;
  * */
 
 public class NbpParserSn {
-    private Map<String, String[]> courses;
-    private ArrayList<String> valutes;
+    private Map<String, String[]> courses = new HashMap<String,String[]>();
+    private ArrayList<String> valutes = new ArrayList<>();
     private static NbpParserSn nbpParseSn = new NbpParserSn();
 
     private NbpParserSn(){
