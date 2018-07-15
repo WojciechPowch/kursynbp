@@ -48,14 +48,17 @@ public class MainServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
 
             String command = jsonObject.getString("command");
+            JSONObject jsonResponse = new JSONObject();
 
             switch(command){
                 case "viewCfg":
-                    JSONObject jsonResponse = new JSONObject();
                     jsonResponse.put("valutes",bankData.getValutes());
                     out.println(jsonResponse.toString());
                     break;
                 case "get":
+                    String searchedValuteCode = jsonObject.getString("valute");
+                    jsonResponse.put("valuteInfo",bankData.getValute(searchedValuteCode));
+                    out.println(jsonResponse.toString());
                     break;
             }
 

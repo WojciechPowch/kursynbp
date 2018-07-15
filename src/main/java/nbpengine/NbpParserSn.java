@@ -129,9 +129,9 @@ public class NbpParserSn {
         String[][] coursesArr = prepareNastedeArr();
 
         for(int i = 0; i < coursesArr.length; i++){
+            String valuteName = null;
+            String tmpArr[] = new String[coursesArr[i].length];
             for(int j = 0; j < coursesArr[i].length; j++){
-                String[] tmpArr = new String[coursesArr[i].length];
-                String valuteName = null;
                 if(j == 1) {
                     valuteName = coursesArr[i][j];
                     tmpArr[j] = coursesArr[i][j];

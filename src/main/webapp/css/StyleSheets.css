@@ -1,0 +1,17 @@
+.initial_currency{
+    font-family: Tahoma;
+    font-size: 20px;
+    height: 5vh;
+    width: 70vh;
+    border: 1px groove black;
+    border-radius: 5px;
+    text-align: center;
+}
+#head{
+    font-family: Tahoma;
+    font-size: 30px;
+    position: absolute;
+}
+#valutes{
+    position: absolute;
+}
