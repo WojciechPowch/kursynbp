@@ -2,7 +2,38 @@ var serverHostName = window.location.hostname;
 var serverProtocolName = window.location.protocol;
 var portName = window.location.port;
 
+const screenWidth = screen.availWidth;
+const screenHeight = screen.availHeight;
+var screenType = undefined;
+
 var initHeight = undefined;
+
+function getScreenType(){
+    
+}
+
+function getProportionsClass(css_class){
+    var sizes = [];
+    switch(css_class){
+        case "initial_currency":
+            sizes['height'] = screenHeight / 20;
+            sizes['width'] = screenWidth / 2;
+            break;
+    }
+    initHeight = sizes.height;
+    return sizes;
+}
+
+function getPositions4Element(css_element){
+    var position = [];
+    switch(css_element){
+        case "valutes":
+            position['left'] = screenWidth / 4;
+            position['top'] = screenHeight / 5;
+            break;
+    }
+    return position;
+}
 
 if(portName.length == 0)
     portName = 80;
@@ -15,6 +46,7 @@ else
     serverPath = serverProtocolName + "//" + serverHostName;
 
 function getViewConfigConnection(url, jsonData){
+    var this_ = this;
     $.ajax({
         url: url + "/redist",
         type: 'POST',
@@ -27,6 +59,7 @@ function getViewConfigConnection(url, jsonData){
             if(response){
                 if(response.valutes){
                     var valutesArr = response.valutes;
+                    var sizes = this_.getProportionsClass('initial_currency');
                     
                     valutesArr.forEach(function(item, i, arr){
                         var el = document.createElement('div');
@@ -35,11 +68,13 @@ function getViewConfigConnection(url, jsonData){
                         el.appendChild(node);
                         $(el).addClass('initial_currency');
                         $(el).attr('name',item);
+                        $(el).attr('id','cur$');
+                        
+                        $('.initial_currency').css('width',sizes['width'].toString()+'px');
+                        $('.initial_currency').css('height',sizes['height'].toString()+'px');
+                        
                         $("#valutes").append(el);
                         $("#valutes").append(br);
-                        console.log($('initial_currency').css('height'));
-                        if(initHeight == undefined)
-                            initHeight = $('.initial_currency').css('height');
                     });
                 }
             }
@@ -78,21 +113,19 @@ function getViewConf(){
 }
 
 function setInitialPosition(){
-    var el = $('#valutes');
-    var head = $('#head');
-    el.css('left','30vh');
-    el.css('top','10vh');
+    var positions = getPositions4Element('valutes');
     
-    head.css('left','50vh');
+    var el = $('#valutes');
+    el.css('left', positions['left'].toString()+'px');
+    el.css('top', positions['top'].toString()+'px');
 }
 
 function getHeightDifference(hNow, h){
     //pseudo Semaphor
     hNow = hNow.replace('px','');
-    h = h.replace('px','');
     
     h1 = parseInt(hNow);
-    h2 = parseInt(h);
+    h2 = h;
     
     return Math.abs(h1 - h2);
 }
@@ -100,11 +133,11 @@ function getHeightDifference(hNow, h){
 function setInitialEvents(){
     var this_ = this;
     $('html').on('mouseover','.initial_currency',function(){
-        if(this_.getHeightDifference($(this).css('height'), this_.initHeight) <= 2)
+        if(this_.getHeightDifference($(this).css('height'), this_.initHeight) == 0)
             $(this).animate({height: '10vh'},400);
     });
     $('html').on('mouseleave','.initial_currency',function(){
-        $(this).animate({height: '5vh'},400);
+        $(this).animate({height: this_.initHeight.toString()+'px'},400);
     });
 }
 
