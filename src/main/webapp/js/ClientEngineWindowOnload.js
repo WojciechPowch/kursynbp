@@ -7,6 +7,7 @@ const screenHeight = screen.availHeight;
 var screenType = undefined;
 
 var initHeight = undefined;
+var initFontSize = undefined;
 
 function getScreenType(){
     
@@ -18,9 +19,11 @@ function getProportionsClass(css_class){
         case "initial_currency":
             sizes['height'] = screenHeight / 20;
             sizes['width'] = screenWidth / 2;
+            sizes['fontsize'] = screenWidth / 55;
             break;
     }
     initHeight = sizes.height;
+    initFontSize = sizes.fontsize;
     return sizes;
 }
 
@@ -29,7 +32,10 @@ function getPositions4Element(css_element){
     switch(css_element){
         case "valutes":
             position['left'] = screenWidth / 4;
-            position['top'] = screenHeight / 5;
+            position['top'] = screenHeight / 7;
+            break;
+            case "head":
+            position['headerheight'] = screenHeight / 9;
             break;
     }
     return position;
@@ -70,8 +76,9 @@ function getViewConfigConnection(url, jsonData){
                         $(el).attr('name',item);
                         $(el).attr('id','cur$');
                         
-                        $('.initial_currency').css('width',sizes['width'].toString()+'px');
-                        $('.initial_currency').css('height',sizes['height'].toString()+'px');
+                        $('.initial_currency').css('width', sizes['width'].toString()+'px');
+                        $('.initial_currency').css('height', sizes['height'].toString()+'px');
+                        $('.initial_currency').css('font-size', sizes['fontsize'].toString()+'px');
                         
                         $("#valutes").append(el);
                         $("#valutes").append(br);
@@ -133,11 +140,16 @@ function getHeightDifference(hNow, h){
 function setInitialEvents(){
     var this_ = this;
     $('html').on('mouseover','.initial_currency',function(){
-        if(this_.getHeightDifference($(this).css('height'), this_.initHeight) == 0)
-            $(this).animate({height: '10vh'},400);
+        if(this_.getHeightDifference($(this).css('height'), this_.initHeight) == 0){
+            $(this).css('box-shadow','0 4px 8px 0 grey, 0 6px 20px 0 grey');
+            $(this).animate({height: '10vh'}, 400);
+            $(this).animate({fontSize: '6vh'}, 400);
+        }
     });
     $('html').on('mouseleave','.initial_currency',function(){
-        $(this).animate({height: this_.initHeight.toString()+'px'},400);
+        $(this).animate({fontSize: this_.initFontSize.toString()+'px'}, 200);
+        $(this).animate({height: this_.initHeight.toString()+'px'}, 400);
+        $(this).css('box-shadow','none');
     });
 }
 
@@ -151,8 +163,14 @@ function setOnClickEvents(){
     });
 }
 
+function setHeaderHeight(){
+    var fit = getPositions4Element('head');
+    $('.head').css('height',fit.headerheight.toString()+'px');
+}
+
 window.onload = function(){
     getViewConf();
+    setHeaderHeight();
     setInitialPosition();
     setInitialEvents();
     setOnClickEvents();
