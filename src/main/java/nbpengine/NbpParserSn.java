@@ -23,7 +23,7 @@ import java.util.*;
  * */
 
 public class NbpParserSn {
-    private Map<String, String[]> courses = new HashMap<String,String[]>();
+    private Map<String, HashMap<String, String>> courses = new HashMap<String, HashMap<String, String>>();
     private ArrayList<String> valutes = new ArrayList<>();
     private static NbpParserSn nbpParseSn = new NbpParserSn();
 
@@ -131,23 +131,18 @@ public class NbpParserSn {
         for(int i = 0; i < coursesArr.length; i++){
             String valuteName = null;
             String tmpArr[] = new String[coursesArr[i].length];
-            for(int j = 0; j < coursesArr[i].length; j++){
-                if(j == 1) {
-                    valuteName = coursesArr[i][j];
-                    tmpArr[j] = coursesArr[i][j];
-                    valutes.add(coursesArr[i][j]);
-                }
-                else
-                    tmpArr[j] = coursesArr[i][j];
+            HashMap<String, String> valuteMap = new HashMap<>();
+            valuteMap.put("name", coursesArr[i][0]);
+            valuteMap.put("code", coursesArr[i][1]);
+            valuteMap.put("middleCourse", coursesArr[i][2]);
 
-                if(j == coursesArr[i].length - 1)
-                    courses.put(valuteName,tmpArr);
-            }
+            valutes.add(coursesArr[i][1]);
+            courses.put(coursesArr[i][1], valuteMap);
         }
     }
 
-    public String[] getValute(String valute){
-        String[] value = null;
+    public HashMap<String, String> getValute(String valute){
+        HashMap<String, String> value = null;
 
         value = courses.get(valute);
 

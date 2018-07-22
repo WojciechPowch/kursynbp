@@ -41,15 +41,72 @@ function getPositions4Element(css_element){
     return position;
 }
 
+function getSizeAtrr4Dialog(){
+    var attr = [];
+    attr['width'] = 3 * (screenWidth / 4);
+    attr['height'] = screenHeight / 2;
+    attr['position'] = 'absolute';
+    attr['left'] = screenWidth / 9;
+    
+    return attr;
+}
+
+function getCoordinatesOfElement(el){
+    //zaimplementowac ciało metody
+}
+
 if(portName.length == 0)
     portName = 80;
 
 var serverPath = undefined;
 
-if(serverHostName === "localhost")
+if (serverHostName === "localhost") {
     serverPath = serverProtocolName + "//" + serverHostName + ":" + portName;
-else
+} else {
     serverPath = serverProtocolName + "//" + serverHostName;
+}
+
+function createDialogElement(valuteInfo, current){
+    var modal = document.createElement('div');
+    var modalContent = document.createElement('div');
+    var close = document.createElement('span');
+    $(modal).addClass('dialog');
+    $(modalContent).addClass('dialog-content');
+    $(close).addClass('close');
+    $(close).text('x');
+    
+    var p_nodes = [];
+    for(var i = 0; i < 3; i++) {
+        p_nodes[i] = document.createElement('p');
+    }
+    
+    var n_nodes = [];
+    n_nodes[0] = document.createTextNode(valuteInfo.code.toString());
+    n_nodes[1] = document.createTextNode(valuteInfo.name.toString());
+    n_nodes[2] = document.createTextNode(valuteInfo.middleCourse.toString());
+    
+    $(modal).append(modalContent);
+    $(modalContent).append(close);
+    p_nodes.forEach(function(item, i){
+        item.appendChild(n_nodes[i]);
+        $(modalContent).append(item);
+    });
+    
+    $(close).on('mouseover', function(){
+        $(this).animate({fontSize: '35px'}, 200);
+    });
+    
+    $(close).on('mouseleave', function(){
+        $(this).animate({fontSize: '28px'}, 200);
+    })
+    
+    $(close).on('click', function(){
+        $(modal).css('display', 'none');
+    });
+    
+    $('body').append(modal);
+    $(modal).css('display', 'block');
+}
 
 function getViewConfigConnection(url, jsonData){
     var this_ = this;
@@ -81,7 +138,9 @@ function getViewConfigConnection(url, jsonData){
                         $('.initial_currency').css('font-size', sizes['fontsize'].toString()+'px');
                         
                         $("#valutes").append(el);
-                        $("#valutes").append(br);
+                        if ( i < valutesArr.length - 1) {
+                            $("#valutes").append(br);
+                        }
                     });
                 }
             }
@@ -93,6 +152,7 @@ function getViewConfigConnection(url, jsonData){
 }
 
 function getValuteInfo(url, jsonData, current){
+    var this_ = this;
     $.ajax({
         url: url + '/redist',
         type: 'POST',
@@ -104,8 +164,9 @@ function getValuteInfo(url, jsonData, current){
             if(response){
                 if(response.valuteInfo){
                     var valInfo = response.valuteInfo;
+                    this_.createDialogElement(valInfo, current);
                 }
-            }
+             }
         },
         error: function(){
             alert('Server connect error');
@@ -159,7 +220,7 @@ function setOnClickEvents(){
         var jsonData = new Object();
         jsonData.valute = valCode;
         jsonData.command = 'get';
-        getValuteInfo(serverPath, JSON.stringify(jsonData), $(this));
+        getValuteInfo(serverPath, JSON.stringify(jsonData), this);
     });
 }
 
