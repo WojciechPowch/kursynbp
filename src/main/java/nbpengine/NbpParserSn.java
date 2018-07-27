@@ -26,6 +26,7 @@ public class NbpParserSn {
     private Map<String, HashMap<String, String>> courses = new HashMap<String, HashMap<String, String>>();
     private ArrayList<String> valutes = new ArrayList<>();
     private static NbpParserSn nbpParseSn = new NbpParserSn();
+    private NbpUtils nbpUtils = new NbpUtils();
 
     private NbpParserSn(){
         initializeCourses();
@@ -39,38 +40,6 @@ public class NbpParserSn {
         return valutes;
     }
 
-    private String getUrlContent(String urlAddress)
-    {
-        URL url;
-        URLConnection urlConnection;
-        BufferedReader bufferedReader;
-        StringBuilder stringBuilder;
-        String ret = null;
-
-        try
-        {
-
-            url = new URL(urlAddress);
-            urlConnection = url.openConnection();
-            bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(),StandardCharsets.UTF_8));
-            stringBuilder = new StringBuilder();
-
-            String helper = "";
-
-            while((helper=bufferedReader.readLine())!=null)
-            {
-                stringBuilder.append(helper);
-            }
-
-            ret = stringBuilder.toString();
-
-        }catch(Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-        return ret;
-    }
-
     private String getNode(Node node, String tagname)
     {
         Element elemet = (Element) node;
@@ -82,13 +51,11 @@ public class NbpParserSn {
 
     private String[][] prepareNastedeArr(){
         String urlAddress = "http://api.nbp.pl/api/exchangerates/tables/a/?format=xml";
-        String content = getUrlContent(urlAddress);
-
+        String content = nbpUtils.getUrlContent(urlAddress);
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         String[] tagNames ;
         String[][] arr = null;
-
 
         try
         {

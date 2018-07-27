@@ -66,6 +66,69 @@ if (serverHostName === "localhost") {
     serverPath = serverProtocolName + "//" + serverHostName;
 }
 
+function getBoldText(text) {
+    return '<b>'+text+'</b>';
+}
+
+function addEventOnAnimate(element, event, css, value, duration, func = undefined) {
+    this_  = this;
+    switch (css) {
+        case "font-size":
+            if (!func) { 
+                $(element).on(event, function(){
+                    $(this).animate({fontSize: value}, duration);
+                });
+            } else {
+                func(element, event, value, duration, this_);
+            }
+        break;
+    }
+}
+
+function getArrow(size) {
+    var arr = document.createElement('i');
+    $(arr).addClass("fa fa-angle-down");
+    $(arr).css('font-size', size.toString()+'px');
+    return arr;
+}
+
+var arrowFlag = true;
+
+function methodBuilderOnOver() {
+    var this_ = this;
+    var onMouseOver = (element, event, value, duration, __this) => {
+        $(element).on(event, function(){
+            if(this_.arrowFlag){
+                this_.arrowFlag = false;
+                $(this).animate({fontSize: value}, duration);
+                var arrowContainer = document.createElement('span');
+                $(arrowContainer).css('float', 'inherit');
+                $(arrowContainer).css('width', '30px');
+                $(arrowContainer).append(__this.getArrow(28));
+                $(arrowContainer).attr('id', 'arrow');
+            
+                $(this).append(arrowContainer);
+            }
+        });
+    }
+    return onMouseOver;
+}
+
+function methodBuilderOnLeave() {
+    var this_ = this;
+    var onMouseLeave = (element, event, value, duration, __this) => {
+        $(element).on(event, function(){
+            $(this).animate({fontSize: value}, duration);
+            var parent = document.getElementById('o_history');
+            var child = document.getElementById('arrow');
+            parent.removeChild(child);
+            this_.arrowFlag = true;
+        });
+    }
+    
+    return onMouseLeave;
+}
+
 function createDialogElement(valuteInfo, current){
     var modal = document.createElement('div');
     var modalContent = document.createElement('div');
@@ -80,32 +143,47 @@ function createDialogElement(valuteInfo, current){
         p_nodes[i] = document.createElement('p');
     }
     
-    var n_nodes = [];
-    n_nodes[0] = document.createTextNode(valuteInfo.code.toString());
-    n_nodes[1] = document.createTextNode(valuteInfo.name.toString());
-    n_nodes[2] = document.createTextNode(valuteInfo.middleCourse.toString());
+    var text_nodes = [];
+    text_nodes[0] = getBoldText("Kod waluty: ")+valuteInfo.code.toString();
+    text_nodes[1] = getBoldText("Nazwa waluty: ")+valuteInfo.name.toString();
+    text_nodes[2] = getBoldText("Kurs średni: ")+valuteInfo.valuteInfo.Mid.toString();
     
+    var date = document.createElement('div');
+    $(date).append(new Date().toDateString());
+
     $(modal).append(modalContent);
     $(modalContent).append(close);
+    $(modalContent).append(date);
     p_nodes.forEach(function(item, i){
-        item.appendChild(n_nodes[i]);
+        $(item).append(text_nodes[i]);
         $(modalContent).append(item);
     });
     
-    $(close).on('mouseover', function(){
-        $(this).animate({fontSize: '35px'}, 200);
-    });
-    
-    $(close).on('mouseleave', function(){
-        $(this).animate({fontSize: '28px'}, 200);
-    })
+    addEventOnAnimate(close, 'mouseover', 'font-size', '35px', 200);
+    addEventOnAnimate(close, 'mouseleave', 'font-size', '28px', 200);
     
     $(close).on('click', function(){
         $(modal).css('display', 'none');
     });
     
+    var openHistory = document.createElement('div');
+    $(modalContent).append(openHistory);
+    $(openHistory).append(getBoldText("pokaż historyczne")+'<br/>');
+    $(openHistory).addClass('open_history');
+    $(openHistory).attr('id', 'o_history');
+    
     $('body').append(modal);
     $(modal).css('display', 'block');
+    $(openHistory).css('width', $(modalContent).css('width'));
+    
+    $(date).css('width', $(modalContent).css('width'));
+    $(date).css('text-align', 'center');
+    
+    var onMouseOver = methodBuilderOnOver();
+    var onMouseLeave = methodBuilderOnLeave();
+    
+    addEventOnAnimate(openHistory, 'mouseover', 'font-size', '15px', 200, onMouseOver);
+    addEventOnAnimate(openHistory, 'mouseleave', 'font-size', '10px', 200, onMouseLeave);
 }
 
 function getViewConfigConnection(url, jsonData){
@@ -136,6 +214,7 @@ function getViewConfigConnection(url, jsonData){
                         $('.initial_currency').css('width', sizes['width'].toString()+'px');
                         $('.initial_currency').css('height', sizes['height'].toString()+'px');
                         $('.initial_currency').css('font-size', sizes['fontsize'].toString()+'px');
+                        $('.initial_currency').css('cursor', 'pointer');
                         
                         $("#valutes").append(el);
                         if ( i < valutesArr.length - 1) {

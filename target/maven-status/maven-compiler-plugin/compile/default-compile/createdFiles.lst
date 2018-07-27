@@ -1,2 +1,4 @@
 nbpengine\NbpParserSn.class
+nbpengine\SoloValuteParser.class
+nbpengine\NbpUtils.class
 servlets\MainServlet.class

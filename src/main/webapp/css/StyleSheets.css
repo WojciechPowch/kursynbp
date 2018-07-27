@@ -37,7 +37,7 @@
     background-color: aquamarine;
     margin: auto;
     padding: 20px;
-    border-radius: 3px;
+    border-radius: 5px;
     width: 80%;
 }
 
@@ -51,5 +51,11 @@
 
 .close:hover,
 .close:focus {
+    cursor: pointer;
+}
+
+.open_history {
+    font-size: 10px;
+    text-align: center;
     cursor: pointer;
 }

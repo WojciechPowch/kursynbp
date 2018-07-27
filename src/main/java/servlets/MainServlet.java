@@ -1,6 +1,7 @@
 package servlets;
 
 import nbpengine.NbpParserSn;
+import nbpengine.SoloValuteParser;
 import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -15,6 +16,7 @@ import java.io.PrintWriter;
 public class MainServlet extends HttpServlet {
 
     private NbpParserSn bankData = NbpParserSn.getInstance();
+    private SoloValuteParser soloValute = new SoloValuteParser();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException{
         response.setContentType("text/html");
@@ -50,14 +52,14 @@ public class MainServlet extends HttpServlet {
             String command = jsonObject.getString("command");
             JSONObject jsonResponse = new JSONObject();
 
-            switch(command){
+            switch (command) {
                 case "viewCfg":
                     jsonResponse.put("valutes",bankData.getValutes());
                     out.println(jsonResponse.toString());
                     break;
                 case "get":
                     String searchedValuteCode = jsonObject.getString("valute");
-                    jsonResponse.put("valuteInfo",bankData.getValute(searchedValuteCode));
+                    jsonResponse.put("valuteInfo",soloValute.getValuteInfo(searchedValuteCode));
                     out.println(jsonResponse.toString());
                     break;
             }
